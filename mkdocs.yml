@@ -1,0 +1,10 @@
+site_name: "WSF-Nxg-Tech-Docs"
+site_description: "Tech docs for WSF Nxg"
+repo_url: https://github.com/nirmalarya/wsf-nxg-tech-docs
+edit_uri: edit/main/docs
+
+nav:
+  - Introduction: index.md
+
+plugins:
+  - techdocs-core

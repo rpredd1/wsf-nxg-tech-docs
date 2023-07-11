@@ -1,0 +1,47 @@
+name: Publish TechDocs Site
+
+on:
+  push:
+    branches:
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+  create:
+
+jobs:
+  publish-techdocs-site:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+
+    env:
+      TECHDOCS_S3_BUCKET_NAME: 'bayer-backstage-docs-prod'
+      ENTITY_NAMESPACE: 'default'
+      ENTITY_KIND: 'Component'
+      ENTITY_NAME:  "WSF-Nxg-Tech-Docs"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+      - uses: actions/setup-python@v2
+
+      - name: Install techdocs-cli
+        run: sudo npm install -g @techdocs/cli
+
+      - name: Install mkdocs and mkdocs plugins
+        run: python -m pip install mkdocs-techdocs-core==1.*
+
+      - name: Generate docs site
+        run: techdocs-cli generate --no-docker --verbose
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          role-to-assume: arn:aws:iam::992225069620:role/SC-992225069620-pp-zi3y2whtcthzk-Role-898BZQTXGXYK
+          aws-region: us-east-1
+
+      - name: Publish docs site
+        run: techdocs-cli publish --publisher-type awsS3 --storage-name $TECHDOCS_S3_BUCKET_NAME --entity $ENTITY_NAMESPACE/$ENTITY_KIND/$ENTITY_NAME

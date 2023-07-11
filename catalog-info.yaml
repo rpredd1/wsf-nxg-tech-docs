@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "WSF-Nxg-Tech-Docs"
+  description: "Tech docs for WSF Nxg"
+  annotations:
+    github.com/project-slug: nirmalarya/wsf-nxg-tech-docs
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: "group:default/wsf-bayer"
